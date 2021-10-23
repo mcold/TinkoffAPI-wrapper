@@ -52,3 +52,34 @@ class Ticker:
         self.currency = d['currency']
         self.name = d['name']
         self.type = d['type']
+
+class Order:
+    ticker = ''
+    order_id = ''
+    operation = ''
+    status = ''
+    reject_reason = ''
+    message = ''
+    requested_lots = 0
+    lots = 0
+    commission = 0
+    currency = ''
+    bar_number = 0
+    level = 0
+
+    def __init__(self, d, level=0, ticker=''):
+        self.ticker = ticker if ticker != None else ''
+        self.order_id = d['orderId'] if d.get('orderId') != None else ''
+        self.operation = d['operation'] if d.get('operation') != None else ''
+        self.status = d['status'] if d.get('status') else ''
+        self.reject_reason = d['rejectReason'] if d.get('rejectReason') != None else ''
+        self.message = d['message'] if d.get('message') != None else ''
+        self.requested_lots = d['requestedLots'] if d.get('requestedLots') != None else 0
+        self.lots = d['executedLots'] if d.get('executedLots') != None else 0
+        self.commission = d['commission']['value'] if d.get('commission') != None else 0
+        self.currency = d['commission']['currency'] if d.get('commission') != None else ''
+        self.bar_number = 2
+        self.level = level
+    
+    def __str__(self) -> str:
+        return ('Found order: {ticker} {lots}')

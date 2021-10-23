@@ -4,6 +4,7 @@ import api
 import useful
 import sys
 import inspect
+import datetime
 from market import Candle
 
 def is_pin(cur_candle, prev_candle):
@@ -28,7 +29,7 @@ def is_prev_hour_of_day_pin(ticker):
         prev_candle = Candle(l_candles[-2])
         return is_pin(last_candle, prev_candle), last_candle.high
     except:
-        print('Error in finding previous hour pin!')
+        print(str(datetime.datetime.now()) + ': ' + 'Error in finding previous hour pin!')
         current_frame = inspect.currentframe()
         print(current_frame)
         print('Ticker: {ticker}'.format(ticker))
@@ -44,7 +45,7 @@ def is_prev_hour_pin(ticker):
         prev_candle = Candle(l_candles[-2])
         return is_pin(last_candle, prev_candle), last_candle.high
     except:
-        print('Error in finding previous hour pin!')
+        print(str(datetime.datetime.now()) + ': ' + 'Error in finding previous hour pin!')
         current_frame = inspect.currentframe()
         print(current_frame)
         print('Ticker: {ticker}'.format(ticker))
@@ -59,7 +60,7 @@ def is_def_hour_is_pin(ticker, prev_time_str):
         prev_candle = Candle(l_candles[-2])
         return is_pin(last_candle, prev_candle), last_candle.high
     except:
-        print('Error in finding previous hour pin!')
+        print(str(datetime.datetime.now()) + ': ' + 'Error in finding previous hour pin!')
         current_frame = inspect.currentframe()
         print(current_frame)
         print('Ticker: {ticker}'.format(ticker))

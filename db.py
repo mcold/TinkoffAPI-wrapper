@@ -1,8 +1,10 @@
 # coding: utf-8
 
-from market import Ticker, Candle
+from market import Ticker, Candle, Order
 import cx_Oracle
 import api
+import sys
+import inspect
 
 # TODO: for all procedures make try-except + log-population
 
@@ -21,42 +23,66 @@ def pop_candle(t = Ticker):
     """
     """
 
-def pop_order(ticker, d_order, interval, level, type='M'):
+def pop_order(interval, order, status, type='M'):
     """
         Order population
     """
-    statement = "INSERT INTO TINKOFF.ORDERS VALUES('{0}', '{1}','{2}','{3}', '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')".format(
-                ticker
-                , d_order["orderId"] if d_order.get("orderId") != None else 'NULL'
-                , type
-                , d_order["operation"] if d_order.get("operation") != None else 'NULL'
-                , d_order["status"] if d_order.get("status") != None else 'NULL'
-                , d_order["rejectReason"] if d_order.get("rejectReason") != None else 'NULL'
-                , d_order["requestedLots"] if d_order.get("requestedLots") != None else 'NULL'
-                , d_order["executedLots"] if d_order.get("") != None else 'NULL'
-                , d_order["commission"]["currency"] if d_order["commission"].get("currency") != None else 'NULL'
-                , d_order["commission"]["value"] if d_order["commission"].get("value") != None else 'NULL'
-                , 'OPEN'
-                , interval
-                , level)
-    with cx_Oracle.connect(user=user, password=password,
-                        dsn=dsn,
-                        encoding="UTF-8") as connection:
-        cursor = connection.cursor()
-        cursor.execute(statement)
-        connection.commit()               
+    try:
+        statement = "INSERT INTO TINKOFF.ORDERS VALUES('{0}', '{1}','{2}','{3}', '{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')".format(
+                    order.ticker
+                    , order.order_id
+                    , type
+                    , order.operation
+                    , order.status
+                    , order.reject_reason
+                    , order.requested_lots
+                    , order.lots
+                    , order.currency
+                    , order.commission
+                    , status
+                    , interval)
+        with cx_Oracle.connect(user=user, password=password,
+                            dsn=dsn,
+                            encoding="UTF-8") as connection:
+            cursor = connection.cursor()
+            cursor.execute(statement)
+            connection.commit()               
+    except:
+        print('Error in order population')
+        print(order.ticker
+                    , order.order_id
+                    , type
+                    , order.operation
+                    , order.status
+                    , order.reject_reason
+                    , order.requested_lots
+                    , order.lots
+                    , order.currency
+                    , order.commission
+                    , status
+                    , interval)
+        current_frame = inspect.currentframe()
+        print(current_frame)
+        sys.exit(0)
 
 def pop_log(ticker, b_json, code, desc, type='INFO'):
     """
         Log population
     """
     stmt = "INSERT INTO LOGS(TICKER, TYPE, LOG, CODE, DESCRIPTION) VALUES('{ticker}', '{type}', '{json}', {code}, '{description}')".format(ticker=ticker, type=type, json=b_json, code=code, description=desc)
-    with cx_Oracle.connect(user=user, password=password,
-                        dsn=dsn,
-                        encoding="UTF-8") as connection:
-        cursor = connection.cursor()
-        cursor.execute(stmt)
-        connection.commit()
+    try:
+        with cx_Oracle.connect(user=user, password=password,
+                            dsn=dsn,
+                            encoding="UTF-8") as connection:
+            cursor = connection.cursor()
+            cursor.execute(stmt)
+            connection.commit()
+    except:
+        print('Error in log population')
+        print(ticker, type, b_json, code, desc)
+        current_frame = inspect.currentframe()
+        print(current_frame)
+        sys.exit(0)
 
 def clear_table(cursor):
     cursor.execute('TRUNCATE TABLE TINKOFF.TICKER')

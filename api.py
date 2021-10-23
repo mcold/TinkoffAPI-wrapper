@@ -4,6 +4,7 @@ import requests
 import json
 import inspect
 import sys
+import datetime
 
 from requests.models import Response
 from useful import get_last_work_day_str, get_prev_time_str, get_round_current_time_str, get_current_time_str, get_previous_work_days_str
@@ -151,13 +152,13 @@ def get_figi_by_ticker(ticker):
         if r.status_code == 200:
             return r.json()['payload']['instruments'][0]['figi']
         else:
-            print('Not valid value!')
+            print(str(datetime.datetime.now()) + ': ' + 'Not valid value!')
             current_frame = inspect.currentframe()
             print(current_frame)
             print('Ticker: {ticker}'.format(ticker))
             sys.exit(0)
     except:
-        print('API error!')
+        print(str(datetime.datetime.now()) + ': ' + 'API error!')
         current_frame = inspect.currentframe()
         print(current_frame)
         print('Ticker: {ticker}'.format(ticker))
@@ -169,13 +170,13 @@ def get_ticker(ticker):
         if r.status_code == 200:
             return Ticker(r.json()['payload']['instruments'][0])
         else:
-            print('Not valid value!')
+            print(str(datetime.datetime.now()) + ': ' + 'Not valid value!')
             current_frame = inspect.currentframe()
             print(current_frame)
             print('Ticker: {ticker}'.format(ticker))
             sys.exit(0)
     except:
-        print('API error!')
+        print(str(datetime.datetime.now()) + ': ' + 'API error!')
         current_frame = inspect.currentframe()
         print(current_frame)
         print('Ticker: {ticker}'.format(ticker))
@@ -187,7 +188,7 @@ def get_broker_account_id():
         if r.status_code == 200:
             return r.json()['payload']['accounts'][0]['brokerAccountId']
         else:
-            print('Not valid response!')
+            print(str(datetime.datetime.now()) + ': ' + 'Not valid response!')
             print('Response code: {response_code}'.format(response_code=r.status_code))
             current_frame = inspect.currentframe()
             print(current_frame)
@@ -204,7 +205,7 @@ def get_account():
         if r.status_code == 200:
             return Account(r.json()['payload']['accounts'][0])
         else:
-            print('Not valid response!')
+            print(str(datetime.datetime.now()) + ': ' + 'Not valid response!')
             print('Response code: {response_code}'.format(response_code=r.status_code))
             current_frame = inspect.currentframe()
             print(current_frame)
@@ -225,7 +226,7 @@ def get_balance(currency='RUB'):
             if d_cur['currency'] == currency:
                 return d_cur['balance']
     else:
-        print('Not valid response!')
+        print(str(datetime.datetime.now()) + ': ' + 'Not valid response!')
         print('Response code: {response_code}'.format(response_code=b.status_code))
         current_frame = inspect.currentframe()
         print(current_frame)
@@ -238,7 +239,7 @@ def get_active_orders():
     if r.status_code == 200:
         return r.json()["payload"]
     else:
-        print('Not valid response!')
+        print(str(datetime.datetime.now()) + ': ' + 'Not valid response!')
         print('Response code: {response_code}'.format(response_code=r.status_code))
         current_frame = inspect.currentframe()
         print(current_frame)
@@ -271,7 +272,7 @@ def post_market_order(figi, broker_id, lots, operation='Buy'):
     if b.status_code == 200:
         return b.status_code, b.json()['payload']
     else:
-        print('Not valid response!')
+        print(str(datetime.datetime.now()) + ': ' + 'Not valid response!')
         print('Response code: {response_code}'.format(response_code=b.status_code))
         current_frame = inspect.currentframe()
         print(current_frame)
@@ -331,7 +332,7 @@ def get_tickers():
     if r.status_code == 200:
         return r.json()["payload"]["instruments"]
     else:
-        print('Not valid response!')
+        print(str(datetime.datetime.now()) + ': ' + 'Not valid response!')
         print('Response code: {response_code}'.format(response_code=r.status_code))
         print(r.json())
         current_frame = inspect.currentframe()
