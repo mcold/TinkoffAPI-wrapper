@@ -1,0 +1,5 @@
+*test*
+*.txt
+__pycache__
+SECRET.py
+*IDEAS.md*
