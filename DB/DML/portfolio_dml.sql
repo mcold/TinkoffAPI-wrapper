@@ -1,0 +1,2 @@
+INSERT INTO OPERATION(CODE, DESCR)
+  VALUES('GET PORTFOLIO', 'Get portfolio''s position');

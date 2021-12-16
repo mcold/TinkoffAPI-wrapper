@@ -96,6 +96,13 @@ def get_portfolio(broker_account_id):
     params = {'brokerAccountId': '{0}'.format(broker_account_id)}
     return requests.get(api_url, headers=api_headers, params=params)
 
+def get_portfolio_list():
+    """
+        Get portfolio positions
+    """
+    broker_id = get_broker_account_id()
+    return get_portfolio(broker_id).json()['payload']['positions']
+
 def get_portfolio_currencies(broker_account_id):
     api_url = '{0}/portfolio/currencies'.format(api_url_base)
     params = {'brokerAccountId': '{0}'.format(broker_account_id)}
@@ -105,7 +112,7 @@ def get_portfolio_currencies(broker_account_id):
 
 def post_sandbox_register():
     """
-        Регистрация клиента в sandbox
+        Register client in sandbox
     """
     api_url = '{0}/sandbox/register'.format(api_url_base)
     print(api_url)

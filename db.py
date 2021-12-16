@@ -67,6 +67,52 @@ def pop_order(interval, order, status, type='M'):
         print(current_frame)
         sys.exit(0)
 
+def pop_portfolio():
+    """
+        Download portfolio positions
+    """
+    l = api.get_portfolio_list()
+    if len(l) > 0:
+        with cx_Oracle.connect(user=user, password=password,
+                            dsn=dsn,
+                            encoding="UTF-8") as connection:
+            cursor = connection.cursor()
+            cursor.execute('TRUNCATE TABLE PORTFOLIO')
+            for pos in l:
+                stmt = """INSERT INTO PORTFOLIO(FIGI,
+                                               TICKER,
+                                               ISIN,
+                                               TYPE,
+                                               BALANCE,
+                                               LOTS,
+                                               CURRENCY,
+                                               NAME,
+                                               AVG_PRICE, 
+                                               EXP_YIELD)
+                                    VALUES('{figi}',
+                                            '{ticker}',
+                                            '{isin}',
+                                            '{type}',
+                                            {balance},
+                                            {lots},
+                                            '{currency}',
+                                            '{name}',
+                                            {avg_price},
+                                            {exp_yield}
+                                            )""".format(
+                                            figi=pos['figi']
+                                            , ticker=pos['ticker']
+                                            , isin=pos.get('isin')
+                                            , type=pos['instrumentType']
+                                            , balance=pos['balance']
+                                            , lots=pos['lots']
+                                            , currency=pos['expectedYield']['currency']
+                                            , name=pos['name']
+                                            , avg_price=pos['averagePositionPrice']['value']
+                                            , exp_yield=pos['expectedYield']['value'])
+                cursor.execute(stmt)
+            connection.commit()
+
 def pop_log(ticker, b_json, code, desc, type='INFO'):
     """
         Log population

@@ -1,0 +1,13 @@
+CREATE TABLE PORTFOLIO(
+    FIGI        VARCHAR2(15)
+    , TICKER    VARCHAR2(20)
+    , ISIN      VARCHAR2(15)
+    , TYPE      VARCHAR2(20)
+    , BALANCE   NUMBER(6)
+    , LOTS      NUMBER(6)
+    , CURRENCY  VARCHAR2(3)
+    , NAME      VARCHAR2(200)
+    , AVG_PRICE NUMBER(8,2)
+    , EXP_YIELD NUMBER(8,2)    
+)
+/
