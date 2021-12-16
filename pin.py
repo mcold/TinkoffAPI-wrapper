@@ -50,7 +50,16 @@ def is_prev_hour_pin(ticker):
         print(current_frame)
         print('Ticker: {ticker}'.format(ticker))
         sys.exit(0)
-        
+
+def is_prev_4hour_pin(ticker, interval):
+    l_candles = api.get_prev_work_days_4hour_candles(ticker, interval)
+    candle_last = l_candles[-1]
+    candle_prev = l_candles[-2]
+    if candle_last.high <= candle_prev.high and candle_last.low >= candle_prev.low:
+        return True, candle_last.high, candle_last.low
+    else:
+        return False, None, None
+
 def is_def_hour_is_pin(ticker, prev_time_str):
     try:
         figi = api.get_figi_by_ticker(ticker)

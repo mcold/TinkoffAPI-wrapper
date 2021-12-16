@@ -84,7 +84,7 @@ def job():
     # close previous order
     if hour_num != hour_start:
         if order.order_id != '':
-            close_previous(hour_num)
+            close_previous()
     
     # if last - don't create others
     if hour_num == hour_finish:

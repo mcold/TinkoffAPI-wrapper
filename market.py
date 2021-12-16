@@ -23,35 +23,74 @@ class Candle:
     figi = ''
     
     def __init__(self, d):
-        self.open =d['o']
-        self.close =d['c']
-        self.high =d['h']
-        self.low =d['l']
-        self.volume =d['v']
-        self.time = d['time']
-        self.interval = d['interval']
-        self.figi = d['figi']
+        self.open =d['o'] if d.get('o') != None else 0
+        self.close =d['c'] if d.get('c') != None else 0
+        self.high =d['h'] if d.get('h') != None else 0
+        self.low =d['l'] if d.get('l') != None else 0
+        self.volume =d['v'] if d.get('v') != None else 0
+        self.time = d['time'] if d.get('time') != None else ''
+        self.interval = d['interval'] if d.get('interval') != None else ''
+        self.figi = d['figi'] if d.get('figi') != None else ''
+    
+    def __add__(self, other):
+        self.close = other.close
+        if self.high < other.high:
+            self.high = other.high
+        if self.low > other.low:
+            self.low = other.low
+        self.volume = self.volume + other.volume
+        return self
 
+    def __str__(self):
+        # return '{0}'.format(self.open)#: {figi}'.format(self.figi)
+        return (' figi: {0} \n open: {1} \n close: {2} \n high: {3} \n low: {4} \n volume: {5} \n time: {6} \n interval: {7} \n\n'.format(self.figi, str(self.open), str(self.close), str(self.high), str(self.low), str(self.volume), str(self.time), self.interval))
 
 class Ticker:
-    figi = ''
-    ticker = ''
-    isin = ''
-    min_price_increment = 0
-    lot = 0
-    currency = ''
-    name = ''
-    type = ''
+    figi = None
+    ticker = None
+    isin = None
+    min_price_increment = None
+    lot = None
+    currency = None
+    name = None
+    type = None
 
     def __init__(self, d):
-        self.figi = d['figi']
-        self.ticker = d['ticker']
-        self.isin = d['isin']
-        self.min_price_increment = d['minPriceIncrement']
-        self.lot = d['lot']
-        self.currency = d['currency']
-        self.name = d['name']
-        self.type = d['type']
+        self.figi = d['figi'] if d.get('figi') != None else ''
+        self.ticker = d['ticker'] if d.get('ticker') != None else ''
+        self.isin = d['isin'] if d.get('isin') != None else ''
+        self.min_price_increment = d['minPriceIncrement'] if d.get('minPriceIncrement') != None else 0
+        self.lot = d['lot'] if d.get('lot') != None else 0
+        self.currency = d['currency'] if d.get('currency') != None else ''
+        self.name = d['name'] if d.get('name') != None else ''
+        self.type = d['type'] if d.get('type') != None else ''
+
+    def __str__(self) -> str:
+        return """\n\t\t{ticker_str}{ticker}
+                {figi_str}{figi}
+                {isin_str}{isin}
+                {name_str}{name}
+                {min_str}{min_price_increment}
+                {lot_str}{lot}
+                {cur_str}{currency}
+                {type_str}{type}\n\n""".format(
+                    ticker_str='ticker:'.ljust(25, ' '),
+                    ticker=self.ticker, 
+                    figi_str='figi:'.ljust(25, ' '),
+                    figi=self.figi, 
+                    isin_str='sin:'.ljust(25, ' '),
+                    isin=self.isin, 
+                    name_str='name:'.ljust(25, ' '),
+                    name=self.name, 
+                    min_str='price_increment:'.ljust(25, ' '),
+                    min_price_increment=self.min_price_increment, 
+                    lot_str='lot:'.ljust(25, ' '),
+                    lot=self.lot, 
+                    cur_str='currency:'.ljust(25, ' '),
+                    currency=self.currency, 
+                    type_str='type:'.ljust(25, ' '),
+                    type=self.type)
+        
 
 class Order:
     ticker = ''
@@ -82,4 +121,12 @@ class Order:
         self.level = level
     
     def __str__(self) -> str:
-        return ('Found order: {ticker} {lots}')
+        return ('Found order: {ticker} {lots}'.format(ticker=self.ticker, lots=self.lots))
+
+    def __eq__(self, other):
+        if self.ticker == other.ticker and self.order_id == other.order_id and self.operation == other.operation and self.lots == other.lots:
+            return True
+        else:
+            return False
+
+    

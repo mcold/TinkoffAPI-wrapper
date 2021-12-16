@@ -1,4 +1,5 @@
 # coding: utf-8
+
 import datetime
 from time import gmtime, strftime
 
@@ -94,20 +95,44 @@ def get_prev_time_str(interval):
         prev_time = get_round_current_time(interval) - datetime.timedelta(weeks=1)
         return prev_time.strftime("%Y-%m-%dT%H:%M:%S") + strftime("%z", gmtime()).strip('0') + ":00"
 
-def get_last_work_day(delta=0):
-    def_day = datetime.datetime.today() - datetime.timedelta(delta)
-    n = 0
+
+        
+def get_prev_work_day(delta = 0, def_day = datetime.datetime.today().replace(microsecond=0, second=0, minute=0, hour=0)):
+    new_day = def_day
     while True:
-        new_day = def_day - datetime.timedelta(n)
         if datetime.date.weekday(new_day) < 5:
-            return new_day.replace(microsecond=0, second=0, minute=0, hour=0)
-        n = n + 1
+            if delta == 0:
+                return new_day
+            else:
+                return get_prev_work_day(delta - 1, new_day - datetime.timedelta(days=1))
+        else:
+            new_day = new_day - datetime.timedelta(days=1)
+        
 
 def get_last_work_day_str(delta=0):
-    date = get_last_work_day(delta)
+    date = get_prev_work_day(delta)
     return date.strftime("%Y-%m-%dT%H:%M:%S") + strftime("%z", gmtime()).strip('0') + ":00"
 
 def get_previous_work_days_str():
+    """
+        Use only for defining intervals
+    """
     prev_1 = get_last_work_day_str(1)
     prev_2 = get_last_work_day_str(2)
+    return prev_1, prev_2
+
+def get_prev_work_day_str():
+    """
+        Use for defining pin of last working day
+    """
+    prev_1 = datetime.datetime.now().replace(microsecond=0, second=0, minute=0, hour=0).strftime("%Y-%m-%dT%H:%M:%S") + strftime("%z", gmtime()).strip('0') + ":00"
+    prev_2 = get_last_work_day_str(0)
+    return prev_1, prev_2
+
+def get_prev_work_day_str():
+    """
+        Use for defining pin of current working day
+    """
+    prev_2 = datetime.datetime.now().replace(microsecond=0, second=0, minute=0).strftime("%Y-%m-%dT%H:%M:%S") + strftime("%z", gmtime()).strip('0') + ":00"
+    prev_1 = get_last_work_day_str(1)
     return prev_1, prev_2
