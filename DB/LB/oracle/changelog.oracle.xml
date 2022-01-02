@@ -1,0 +1,15 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+<changeSet author="mcold" id="v0.1">
+    <tagDatabase tag="v0.1" />
+</changeSet>
+<!-- <include file="pkg.oracle.xml"/>  
+<include file="prc.oracle.xml"/>
+<include file="tbl.oracle.xml"/>
+<include file="dml.oracle.xml"/> -->
+<include file="tbl.oracle.xml"/>
+</databaseChangeLog>

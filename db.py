@@ -20,6 +20,82 @@ dsn = """(DESCRIPTION =
 user = 'TINKOFF'
 password = '15151'
 
+
+class Actions:
+    act_list = list()
+    
+    def __init__(self):
+        with cx_Oracle.connect(user=user, password=password,
+                        dsn=dsn,
+                        encoding="UTF-8") as connection:
+            cursor = connection.cursor()
+            for row in cursor.execute("SELECT id, type, ticker, lots, go_in, created, expire_time, do_time FROM ACTION"):
+                self.act_list.append(Action(row))
+
+    def __str__(self) -> str:
+        v_str = ''
+        for act in self.act_list: 
+            v_str = v_str + act.__str__()
+        return v_str
+
+    def del_act_id(self, id):
+        act_list = []
+        for act in self.act_list:
+            if act.id == id: 
+                act.delete()
+            else:
+                act_list.append(act)
+        self.act_list = act_list
+    
+class Action:
+
+    def __init__(self, tup):
+        self.id = tup[0]
+        self.type = tup[1]
+        self.ticker = tup[2]
+        self.lots = tup[3]
+        self.go_in = tup[4]
+        self.created = tup[5]
+        self.expire_time = tup[6]
+        self.do_time = tup[7]
+        
+    def __str__(self) -> str:
+        # return """{my_id}""".format(my_id=self.id)
+        return """\n---------------------\n id : {my_id}\n type : {type}\n ticker : {ticker}\n lots: {lots}\n go_in : {go_in}\n expire_time : {expire_time}\n created : {created}\n do_time : {do_time}""".format(
+            my_id=str(self.id),
+            type=str(self.type),
+            ticker=str(self.ticker),
+            lots=str(self.lots),
+            go_in=str(self.go_in),
+            expire_time=str(self.expire_time),
+            created=str(self.created),
+            do_time=str(self.do_time)
+            )
+
+    def get_data(self, id):
+        with cx_Oracle.connect(user=user, password=password,
+                        dsn=dsn,
+                        encoding="UTF-8") as connection:
+            cursor = connection.cursor()
+            for cur in cursor.execute("SELECT id, type, ticker, lots, go_in, created, expire_time, do_time FROM ACTION A WHERE ID = {id}".format(id=id)):
+                self.id = cur[0]
+                self.type = cur[1]
+                self.ticker = cur[2]
+                self.lots = cur[3]
+                self.go_in = cur[4]
+                self.created = cur[4]
+                self.expire_time = cur[5]
+                self.do_time = cur[6]
+
+    def delete(self):
+        with cx_Oracle.connect(user=user, password=password,
+                        dsn=dsn,
+                        encoding="UTF-8") as connection:
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM ACTION WHERE ID = {id}".format(id=self.id))
+            connection.commit()
+            
+### POP ###    
 def pop_candle(t = Ticker):
     """
     """
